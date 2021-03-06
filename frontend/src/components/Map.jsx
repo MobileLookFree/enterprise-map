@@ -16,11 +16,21 @@ const basePositions = [55.752017, 37.618331]; // kremlin
 
 const Map = () => {
   const [map, setMap] = useState(null);
-  const [zoom, setZoom] = useState(14);
+  const [zoom, setZoomHandler] = useState(14);
 
   const onMove = useCallback(() => {
-    map && setZoom(map.getZoom());
+    map && setZoomHandler(map.getZoom());
   }, [map])
+
+  const increaseZoom = useCallback(() => {
+    map && map.setZoom(zoom + 1);
+    setZoomHandler(zoom + 1);
+  }, [map, zoom]);
+
+  const decreaseZoom = useCallback(() => {
+    map && map.setZoom(zoom - 1);
+    setZoomHandler(zoom - 1);
+  }, [map, zoom]);
 
   useEffect(() => {
     map && map.on('move', onMove)
@@ -30,29 +40,48 @@ const Map = () => {
   }, [map, onMove]);
 
   return (
-    <MapContainer
-      id="map-container"
-      center={basePositions}
-      minZoom={12}
-      zoom={zoom}
-      maxZoom={16}
-      zoomControl={false}
-      whenCreated={setMap}
-    >
-      <TileLayer
-        url='http://localhost:8080/{z}/{x}/{y}.png'
-      />
-      {zoom < 16 && <Marker
-        icon={icon}
-        position={basePositions}
-        eventHandlers={{
-          click: () => alert('Oh, Kremlin'),
-        }}
-      />}
-      <ZoomControl
-        position="bottomright"
-      />
-    </MapContainer>
+    <div className="app-map">
+      <nav className="app-map-navbar">
+        <span className="app-map-navbar-zoom-title">{`Zoom: ${zoom}`}</span>
+        <div>
+          <button
+            className="app-map-navbar-zoom-button increase"
+            onClick={increaseZoom}
+          >
+            Increase zoom level
+        </button>
+          <button
+            className="app-map-navbar-zoom-button decrease"
+            onClick={decreaseZoom}
+          >
+            Decrease zoom level
+        </button>
+        </div>
+      </nav>
+      <MapContainer
+        id="map-container"
+        center={basePositions}
+        minZoom={12}
+        zoom={zoom}
+        maxZoom={16}
+        zoomControl={false}
+        whenCreated={setMap}
+      >
+        <TileLayer
+          url='http://localhost:8080/{z}/{x}/{y}.png'
+        />
+        {zoom < 16 && <Marker
+          icon={icon}
+          position={basePositions}
+          eventHandlers={{
+            click: () => alert('Oh, Kremlin'),
+          }}
+        />}
+        <ZoomControl
+          position="bottomright"
+        />
+      </MapContainer>
+    </div>
   )
 }
 
