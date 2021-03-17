@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, {  useState, useEffect, useCallback } from 'react'
 import L from 'leaflet';
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet'
 
@@ -16,7 +16,7 @@ const basePositions = [55.752017, 37.618331]; // kremlin
 
 const Map = () => {
   const [map, setMap] = useState(null);
-  const [zoom, setZoomHandler] = useState(14);
+  const [zoom, setZoomHandler] = useState(1);
 
   const onMove = useCallback(() => {
     map && setZoomHandler(map.getZoom());
@@ -61,14 +61,14 @@ const Map = () => {
       <MapContainer
         id="map-container"
         center={basePositions}
-        minZoom={12}
+        minZoom={1}
         zoom={zoom}
-        maxZoom={16}
+        maxZoom={15}
         zoomControl={false}
         whenCreated={setMap}
       >
         <TileLayer
-          url='http://localhost:8080/{z}/{x}/{y}.png'
+          url='http://localhost:8080/control-room/{z}/{x}/{y}.png'
         />
         {zoom < 16 && <Marker
           icon={icon}
@@ -86,3 +86,4 @@ const Map = () => {
 }
 
 export default Map;
+
