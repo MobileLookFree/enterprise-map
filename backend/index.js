@@ -5,7 +5,6 @@ const path = require("path");
 const app = express();
 const PORT = 8080;
 
-// Route which handles requests like the following: /<mbtiles-name>/0/1/2.pbf
 app.get('/:source/:z/:x/:y.png', (req, res) => {
   new MBTiles(path.join(__dirname, '/resources/tiles', req.params.source + '.mbtiles'), (error, mbtiles) => {
     mbtiles.getTile(req.params.z, req.params.x, req.params.y, (error, tile, headers) => {
