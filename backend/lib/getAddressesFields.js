@@ -1,41 +1,30 @@
-/**
- * 
- *  "A": "№ п/п",
-    "B": "Наименование предприятия",
-    "C": "Сокращенное наименование",
-    "D": "ОКПО",
-    "E": "Отрасль",
-    "F": "Органы государственной власти и управления (ОКОГУ)",
-    "G": "Состояние предприятия",
-    "H": "Вид деятельности",
-    "I": "Подотрасли",
-    "J": "Процедура банкротства организаций",
-    "K": "Наименование федерального округа",
-    "L": "Субъект РФ",
-    "Q": "Почтовый индекс",
-    "R": "Тип населенного пункта",
-    "S": "Город, область, край",
-    "T": "Улица, номер дома",
-    "U": "Должность руководителя",
-    "V": "Фамилия имя отчество руководителя",
-    "W": "МТКГ",
-    "X": "Телефон руководителя",
-    "Y": "Телефон предприятия",
-    "Z": "E-mail",
-    "AA": "Интегрированные структуры (уровень 1)",
-    "AB": "Интегрированные структуры (уровень 2)",
-    "AC": "Интегрированные структуры (уровень 3)",
-    "AD": "Интегрированные структуры (уровень 4)"} data
- */
-
 const getAddressesFields = (data = {}) => {
   const addresses = data['Лист1'] || [];
 
   return addresses.map(address => ({
-    id: address.A,
+    id: +address.A,
     fullName: address.B,
     name: address.C,
     okpo: address.D,
+    // address
+    regionType: address.R,
+    region: address.S,
+    street: address.T,
+    // connections
+    chiefPosition: address.U,
+    chiefFullName: address.V,
+    chiefPhone: address.X,
+    phone: address.Y,
+    email: address.Z,
+    // activity
+    branch: address.E,
+    status: address.G,
+    activityType: address.H,
+    subbranch: address.I,
+    level1: address.AA,
+    level2: address.AB,
+    level3: address.AC,
+    level4: address.AD,
   }))
 }
 
