@@ -1,9 +1,10 @@
-
 const fetch = require('node-fetch');
 const { saveJSON } = require('./lib/saveJSON');
+const { getRequestOptions } = require('./lib/getRequestOptions');
+
 const rawAddresses = require('./resources/addresses/rawAddresses.json') || [];
 const { dadataToken, dadataSecret } = require('./private/tokens');
-const { URL, START, END, getRequestOptions } = require('./const');
+const { URL, START, END } = require('./const');
 
 const addresses = rawAddresses
   .filter(address => address.id)
@@ -25,7 +26,7 @@ const getDadata = (address) => fetch(URL, {
   ))
   .catch(error => console.log('error', error));
 
-const getData = async () => {
+const getAddresses = async () => {
   for (const address of addresses) {
     console.log(`Waiting address #${address.id}: ${address.name}`);
     responseById[address.id] = await getDadata(address);
@@ -34,5 +35,5 @@ const getData = async () => {
   return Promise.resolve();
 }
 
-getData()
+getAddresses()
   .then(() => saveJSON(`./resources/dadata/dadata_${START}_${END}.json`, responseById));
