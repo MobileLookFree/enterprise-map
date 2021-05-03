@@ -1,28 +1,38 @@
 
 const fetch = require('node-fetch');
 const { saveJSON } = require('./lib/saveJSON');
-const { START, END } = require('./const');
-
-const url = 'https://cleaner.dadata.ru/api/v1/clean/address';
-const { dadataToken, dadataSecret } = require('./private/tokens');
 const rawAddresses = require('./resources/addresses/rawAddresses.json') || [];
+const { dadataToken, dadataSecret } = require('./private/tokens');
+const { URL, START, END, getRequestOptions } = require('./const');
 
 const addresses = rawAddresses
-  .map(address => `${address.regionType} ${address.region} ${address.street}`)
-  .slice(START, END);
+  .filter(address => address.id)
+  .slice(START, END)
+  .map(address => ({
+    id: address.id,
+    name: address.name,
+    query: `${address.regionType} ${address.region} ${address.street}`
+  }));
+const responseById = {};
 
-const options = {
-  method: 'POST',
-  mode: 'cors',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Token ' + dadataToken,
-    'X-Secret': dadataSecret
-  },
-  body: JSON.stringify(addresses)
+const getDadata = (address) => fetch(URL, {
+  ...getRequestOptions(dadataToken, dadataSecret),
+  body: JSON.stringify([address.query])
+})
+  .then(response => response.json())
+  .then(result => new Promise((resolve) =>
+    setTimeout(() => resolve(result), 125)
+  ))
+  .catch(error => console.log('error', error));
+
+const getData = async () => {
+  for (const address of addresses) {
+    console.log(`Waiting address #${address.id}: ${address.name}`);
+    responseById[address.id] = await getDadata(address);
+    console.log(`Saving address #${address.id}: ${address.name}`);
+  }
+  return Promise.resolve();
 }
 
-fetch(url, options)
-  .then(response => response.json())
-  .then(result => saveJSON(`./resources/addresses/dadata_${START}_${END}.json`, result))
-  .catch(error => console.log('error', error));
+getData()
+  .then(() => saveJSON(`./resources/dadata/dadata_${START}_${END}.json`, responseById));
