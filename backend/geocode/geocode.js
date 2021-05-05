@@ -1,9 +1,9 @@
 const fetch = require('node-fetch');
-const { saveJSON } = require('./lib/saveJSON');
-const { getRequestOptions } = require('./lib/getRequestOptions');
+const { saveJSON } = require('../lib/saveJSON');
+const { getRequestOptions } = require('../lib/getRequestOptions');
 
-const rawAddresses = require('./resources/addresses/rawAddresses.json') || [];
-const { dadataToken, dadataSecret } = require('./private/tokens');
+const rawAddresses = require('../resources/addresses/rawAddresses.json') || [];
+const { dadataToken, dadataSecret } = require('../private/tokens');
 const { URL, START, END } = require('./const');
 
 const addresses = rawAddresses

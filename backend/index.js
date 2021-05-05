@@ -5,6 +5,10 @@ const path = require("path");
 const app = express();
 const PORT = 8080;
 
+app.get('/', (req, res) => {
+  res.send('Server is working!');
+});
+
 app.get('/:source/:z/:x/:y.png', (req, res) => {
   new MBTiles(path.join(__dirname, '/resources/tiles', req.params.source + '.mbtiles'), (error, mbtiles) => {
     mbtiles.getTile(req.params.z, req.params.x, req.params.y, (error, tile, headers) => {
@@ -23,6 +27,11 @@ app.get('/:source/:z/:x/:y.png', (req, res) => {
     }
   });
 });
+
+app.get('/search/:query', (req, res) => {
+  console.log(req.params.query);
+});
+
 
 // Starts up the server on port
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
