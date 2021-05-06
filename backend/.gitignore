@@ -2,7 +2,8 @@
 /node_modules
 
 # offline recources
-/resources
+/resources/*
+!/resources/search
 
 # privat data
 /private

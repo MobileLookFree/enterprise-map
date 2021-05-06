@@ -14,12 +14,13 @@ const icon = L.icon({
   iconAnchor: [16, 32],
 });
 
-const basePositions = [55.752017, 37.618331]
-// [55.752017, 37.618331]; // kremlin
+const basePositions = [55.752017, 37.618331];
 
 const Map = ({ openModal }) => {
   const [map, setMap] = useState(null);
   const [zoom, setZoomHandler] = useState(1);
+  const [enterprises, setEnterprises] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('Патронное производство');
 
   const onMove = useCallback(() => {
     map && setZoomHandler(map.getZoom());
@@ -35,6 +36,33 @@ const Map = ({ openModal }) => {
     setZoomHandler(zoom - 1);
   }, [map, zoom]);
 
+  const onSearch = useCallback((event) => {
+    const { value } = event.target;
+    setSearchQuery(value);
+  }, [setSearchQuery]);
+
+  const onServerSearch = (event) => {
+    event.key === 'Enter' && searchQuery &&
+      fetch(`http://localhost:8080/search/${encodeURIComponent(searchQuery)}`)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          alert(data.type);
+        });
+  }
+
+  const getEnterprises = () => {
+    fetch(`http://localhost:8080/api/get-enterprises`)
+      .then(response => response.json())
+      .then(data => setEnterprises(
+        data.filter(item => item.dadata.geo_lat && item.dadata.geo_lon)
+      ));
+  }
+
+  useEffect(() => {
+    getEnterprises();
+  }, []);
+
   useEffect(() => {
     map && map.on('move', onMove);
     return () => {
@@ -49,20 +77,27 @@ const Map = ({ openModal }) => {
   return (
     <div className="app-map">
       <nav className="app-map-navbar">
-        <span className="app-map-navbar-zoom-title">{`Zoom: ${zoom}`}</span>
+        <input
+          className="app-map-navbar-search"
+          value={searchQuery}
+          onChange={onSearch}
+          onKeyPress={onServerSearch}
+          placeholder="Тематика"
+        />
         <div className="app-map-navbar-zoom-buttons">
+          <span className="app-map-navbar-zoom-title">{`Zoom: ${zoom}`}</span>
           <Button
             className="app-map-navbar-zoom-button increase"
             onClick={increaseZoom}
           >
             Increase zoom level
-            </Button>
+          </Button>
           <Button
             className="app-map-navbar-zoom-button decrease"
             onClick={decreaseZoom}
           >
             Decrease zoom level
-            </Button>
+          </Button>
         </div>
       </nav>
       <MapContainer
@@ -77,11 +112,16 @@ const Map = ({ openModal }) => {
         <TileLayer
           url='http://localhost:8080/russia-1-8/{z}/{x}/{y}.png'
         />
-        {zoom < 16 && <Marker
-          icon={icon}
-          position={basePositions}
-          eventHandlers={markerEventHandlets}
-        />}
+        {zoom > 3 && enterprises.map(enterprise =>
+          <Marker
+            key={enterprise.id}
+            icon={icon}
+            position={[
+              +enterprise.dadata.geo_lat,
+              +enterprise.dadata.geo_lon
+            ]}
+            eventHandlers={markerEventHandlets}
+          />)}
         <ZoomControl
           position="bottomright"
         />

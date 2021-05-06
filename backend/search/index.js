@@ -1,7 +1,7 @@
-const { suggestIcon, trainModel } = require('./model');
+const { suggest, trainModel } = require('./model');
 const use = require('@tensorflow-models/universal-sentence-encoder');
 
-class Search {
+class TFSearch {
   setEncoder = (encoder) => {
     this.encoder = encoder;
   }
@@ -17,17 +17,14 @@ class Search {
     this.setModel(model);
   }
 
-  getIcon = () => suggestIcon(
+  getType = (type) => suggest(
     this.model,
     this.encoder,
-    'Sentrum', // options = book, nut = run
-    0.65
+    type,
+    0.7
   );
 }
 
-const search = new Search();
-search.loadModal()
-  .then(async () => {
-    const icon = await search.getIcon();
-    console.log(icon)
-  });
+module.exports = {
+  TFSearch
+};
