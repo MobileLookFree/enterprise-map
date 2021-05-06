@@ -1,4 +1,3 @@
-// const tf = require("@tensorflow/tfjs");
 const tf = require('@tensorflow/tfjs-node');
 const learnTodos = require("./data/learn_todos.json");
 const exerciseTodos = require("./data/exercise_todos.json");
@@ -14,9 +13,9 @@ const encodeData = async (encoder, tasks) => {
   return embeddings;
 };
 
-const trainModel = async encoder => {
+const trainModel = async (encoder) => {
   try {
-    const loadedModel = await tf.loadLayersModel(`file://data/${MODEL_NAME}.json`);
+    const loadedModel = await tf.loadLayersModel(`file://data/${MODEL_NAME}/model.json`);
     console.log("Using existing model");
     return loadedModel;
   } catch (e) {

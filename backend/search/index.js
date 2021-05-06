@@ -1,19 +1,33 @@
 const { suggestIcon, trainModel } = require('./model');
 const use = require('@tensorflow-models/universal-sentence-encoder');
 
-let sentenceEncoder = null;
-let trainedModel = null;
+class Search {
+  setEncoder = (encoder) => {
+    this.encoder = encoder;
+  }
 
-const loadModal = async () => {
-  sentenceEncoder = await use.load();
-  trainedModel = await trainModel(sentenceEncoder);
+  setModel = (model) => {
+    this.model = model;
+  }
+
+  loadModal = async () => {
+    const encoder = await use.load();
+    this.setEncoder(encoder);
+    const model = await trainModel(encoder);
+    this.setModel(model);
+  }
+
+  getIcon = () => suggestIcon(
+    this.model,
+    this.encoder,
+    'Sentrum', // options = book, nut = run
+    0.65
+  );
 }
 
-loadModal();
-
-console.log(suggestIcon(
-  trainedModel,
-  sentenceEncoder,
-  'Options 123',
-  0.65
-));
+const search = new Search();
+search.loadModal()
+  .then(async () => {
+    const icon = await search.getIcon();
+    console.log(icon)
+  });
