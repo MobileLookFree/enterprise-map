@@ -4,6 +4,7 @@ const path = require('path');
 
 const { TFSearch } = require('./search');
 const enterprises = require('./resources/addresses/addresses.json');
+const { DEFAULT_HEADERS } = require('./const');
 
 const app = express();
 const PORT = 8080;
@@ -20,12 +21,12 @@ app.get('/:source/:z/:x/:y.png', (req, res) => {
   new MBTiles(path.join(__dirname, '/resources/tiles', req.params.source + '.mbtiles'), (error, mbtiles) => {
     mbtiles.getTile(req.params.z, req.params.x, req.params.y, (error, tile, headers) => {
       if (error) {
-        res.set({ "Content-Type": "text/plain" });
+        res.set({ 'Content-Type': 'text/plain' });
         res.status(404).send('Tile rendering error: ' + error + '\n');
       } else {
         res.set(headers);
-        res.set({ "Access-Control-Allow-Origin": "*" });
-        res.set({ "Content-Type": "image/png" });
+        res.set({ 'Access-Control-Allow-Origin': '*' });
+        res.set({ 'Content-Type': 'image/png' });
         res.send(tile);
       }
     });
@@ -36,16 +37,14 @@ app.get('/:source/:z/:x/:y.png', (req, res) => {
 });
 
 app.get('/api/get-enterprises', (req, res) => {
-  res.set({ 'Access-Control-Allow-Origin': '*' });
-  res.set({ 'Content-Type': 'application/json' });
+  res.set(DEFAULT_HEADERS);
   res.send(JSON.stringify(enterprises));
 });
 
 app.get('/search/:query', async (req, res) => {
   const query = decodeURIComponent(req.params.query)
   const { type, prediction } = await tfSearch.getType(query);
-  res.set({ 'Access-Control-Allow-Origin': '*' });
-  res.set({ 'Content-Type': 'application/json' });
+  res.set(DEFAULT_HEADERS);
   res.send(JSON.stringify({ query, type, prediction }));
 });
 

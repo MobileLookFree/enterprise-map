@@ -7,19 +7,41 @@ import L from 'leaflet';
 import markerIcon from '../../assets/icons/marker.svg';
 import './index.scss';
 
+import { createSelector } from 'reselect';
+
+const getMarkers = createSelector(
+  (enterprises) => enterprises,
+  (enterprises, zoom) => zoom,
+  (enterprises, zoom) => {
+    switch (zoom) {
+      case 4:
+      case 5:
+        return enterprises.filter((enterprise, index) => index % 3 === 0);
+      case 6:
+        return enterprises.filter((enterprise, index) => index % 2 === 0);
+      default:
+        return enterprises;
+    }
+  }
+);
+
 const icon = L.icon({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon,
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
+  iconSize: [16, 16],
+  iconAnchor: [8, 16],
 });
 
-const basePositions = [55.752017, 37.618331];
+const center = [55.752017, 37.618331];
 
-const Map = ({ openModal }) => {
+const Map = ({
+  openModal,
+  enterprises,
+  isSearchLoading,
+  searchType,
+}) => {
   const [map, setMap] = useState(null);
   const [zoom, setZoomHandler] = useState(1);
-  const [enterprises, setEnterprises] = useState([]);
   const [searchQuery, setSearchQuery] = useState('Патронное производство');
 
   const onMove = useCallback(() => {
@@ -43,25 +65,8 @@ const Map = ({ openModal }) => {
 
   const onServerSearch = (event) => {
     event.key === 'Enter' && searchQuery &&
-      fetch(`http://localhost:8080/search/${encodeURIComponent(searchQuery)}`)
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          alert(data.type);
-        });
+      searchType(searchQuery);
   }
-
-  const getEnterprises = () => {
-    fetch(`http://localhost:8080/api/get-enterprises`)
-      .then(response => response.json())
-      .then(data => setEnterprises(
-        data.filter(item => item.dadata.geo_lat && item.dadata.geo_lon)
-      ));
-  }
-
-  useEffect(() => {
-    getEnterprises();
-  }, []);
 
   useEffect(() => {
     map && map.on('move', onMove);
@@ -78,11 +83,12 @@ const Map = ({ openModal }) => {
     <div className="app-map">
       <nav className="app-map-navbar">
         <input
-          className="app-map-navbar-search"
+          className='app-map-navbar-search'
           value={searchQuery}
           onChange={onSearch}
           onKeyPress={onServerSearch}
           placeholder="Тематика"
+          disabled={isSearchLoading}
         />
         <div className="app-map-navbar-zoom-buttons">
           <span className="app-map-navbar-zoom-title">{`Zoom: ${zoom}`}</span>
@@ -102,17 +108,17 @@ const Map = ({ openModal }) => {
       </nav>
       <MapContainer
         id="map-container"
-        center={basePositions}
+        center={center}
         minZoom={1}
         zoom={zoom}
-        maxZoom={15}
+        maxZoom={8}
         zoomControl={false}
         whenCreated={setMap}
       >
         <TileLayer
           url='http://localhost:8080/russia-1-8/{z}/{x}/{y}.png'
         />
-        {zoom > 3 && enterprises.map(enterprise =>
+        {zoom > 3 && getMarkers(enterprises, zoom).map(enterprise =>
           <Marker
             key={enterprise.id}
             icon={icon}
