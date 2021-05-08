@@ -6,6 +6,7 @@ import Charts from './Charts';
 import './index.scss';
 
 import { connect } from 'react-redux';
+// import { bindActionCreators } from 'redux';
 import { setLoading } from '../store/enterprises/get/actions';
 import { searchType } from '../store/enterprises/search/actions';
 
@@ -26,11 +27,14 @@ class App extends PureComponent {
   render() {
     const {
       isLoading,
+      error,
       enterprises,
       isSearchLoading,
       searchType,
     } = this.props;
     const { isVisible } = this.state;
+
+    console.log(error)
 
     return (
       <div className="app">
@@ -64,6 +68,7 @@ const mapState = ({
   enterprises: {
     get: {
       isLoading,
+      error,
       enterprises
     },
     search: {
@@ -72,12 +77,17 @@ const mapState = ({
   }
 }) => ({
   isLoading,
+  error,
   enterprises,
   isSearchLoading,
 });
-const mapDispatch = (dispatch) => ({
-  setLoading: isLoading => dispatch(setLoading(isLoading)),
-  searchType: searchQuery => dispatch(searchType(searchQuery)),
-});
+const mapDispatch = {
+  setLoading,
+  searchType,
+};
+// const mapDispatch = (dispatch) => bindActionCreators({
+//   setLoading: isLoading => setLoading(isLoading),
+//   searchType: searchQuery => searchType(searchQuery),
+// }, dispatch);
 
 export default connect(mapState, mapDispatch)(App);

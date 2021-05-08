@@ -4,7 +4,7 @@ import { actionTypes } from './actions';
 const getEnterprises = () =>
   fetch(`http://localhost:8080/api/get-enterprises`)
     .then(response => response.json())
-    .then(data => data.filter(item => item.dadata.geo_lat && item.dadata.geo_lon));
+    .then((data = []) => data.filter(item => item.dadata.geo_lat && item.dadata.geo_lon));
 
 function* getWorker({ payload }) {
   try {
