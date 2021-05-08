@@ -6,9 +6,8 @@ export const actionTypes = {
   },
 };
 
-export const setLoading = (isLoading) => {
+export const startLoading = () => {
   return {
     type: actionTypes.get.load,
-    payload: isLoading
   }
 };

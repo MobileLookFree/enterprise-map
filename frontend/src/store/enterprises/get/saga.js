@@ -6,15 +6,13 @@ const getEnterprises = () =>
     .then(response => response.json())
     .then((data = []) => data.filter(item => item.dadata.geo_lat && item.dadata.geo_lon));
 
-function* getWorker({ payload }) {
+function* getWorker() {
   try {
-    if (payload) {
-      const response = yield call(() => getEnterprises());
-      yield put({
-        type: actionTypes.get.success,
-        payload: response
-      });
-    }
+    const response = yield call(() => getEnterprises());
+    yield put({
+      type: actionTypes.get.success,
+      payload: response
+    });
   } catch (error) {
     yield put({
       type: actionTypes.get.error,

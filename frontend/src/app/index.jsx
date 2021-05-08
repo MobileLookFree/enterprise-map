@@ -7,7 +7,7 @@ import './index.scss';
 
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux';
-import { setLoading } from '../store/enterprises/get/actions';
+import { startLoading } from '../store/enterprises/get/actions';
 import { searchType } from '../store/enterprises/search/actions';
 
 class App extends PureComponent {
@@ -16,8 +16,8 @@ class App extends PureComponent {
   }
 
   componentDidMount() {
-    const { setLoading } = this.props;
-    setLoading(true);
+    const { startLoading } = this.props;
+    startLoading();
   }
 
   openModal = () => this.setState({ isVisible: true });
@@ -34,14 +34,14 @@ class App extends PureComponent {
     } = this.props;
     const { isVisible } = this.state;
 
-    console.log(error)
-
     return (
       <div className="app">
         {{
           null: null,
           true: <LoadingScreen />,
-          false: <React.Fragment>
+          false: error
+            ? <LoadingScreen mode='error'/>
+            : <React.Fragment>
             <Map
               openModal={this.openModal}
               enterprises={enterprises}
@@ -82,7 +82,7 @@ const mapState = ({
   isSearchLoading,
 });
 const mapDispatch = {
-  setLoading,
+  startLoading,
   searchType,
 };
 // const mapDispatch = (dispatch) => bindActionCreators({

@@ -8,7 +8,7 @@ const getReducer = (state = initialState, { type, payload }) => {
     case actionTypes.get.load:
       return {
         ...state,
-        isLoading: payload
+        isLoading: true
       }
     case actionTypes.get.success:
       return {
@@ -20,6 +20,7 @@ const getReducer = (state = initialState, { type, payload }) => {
     case actionTypes.get.error:
       return {
         ...state,
+        isLoading: false,
         error: payload
       }
     default:
