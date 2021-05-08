@@ -1,13 +1,11 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
-import Button from '../Button';
-// map interactions
+import { PureComponent } from 'react'
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet'
-import L from 'leaflet';
+import Button from '../Button';
 
-import markerIcon from '../../assets/icons/marker.svg';
 import './index.scss';
 
 import { createSelector } from 'reselect';
+import getIcon from './getIcon';
 
 const getMarkers = createSelector(
   (enterprises) => enterprises,
@@ -25,115 +23,124 @@ const getMarkers = createSelector(
   }
 );
 
-const icon = L.icon({
-  iconUrl: markerIcon,
-  iconRetinaUrl: markerIcon,
-  iconSize: [16, 16],
-  iconAnchor: [8, 16],
-});
-
-const center = [55.752017, 37.618331];
-
-const Map = ({
-  openModal,
-  enterprises,
-  isSearchLoading,
-  searchType,
-}) => {
-  const [map, setMap] = useState(null);
-  const [zoom, setZoomHandler] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('Патронное производство');
-
-  const onMove = useCallback(() => {
-    map && setZoomHandler(map.getZoom());
-  }, [map])
-
-  const increaseZoom = useCallback(() => {
-    map && map.setZoom(zoom + 1);
-    setZoomHandler(zoom + 1);
-  }, [map, zoom]);
-
-  const decreaseZoom = useCallback(() => {
-    map && map.setZoom(zoom - 1);
-    setZoomHandler(zoom - 1);
-  }, [map, zoom]);
-
-  const onSearch = useCallback((event) => {
-    const { value } = event.target;
-    setSearchQuery(value);
-  }, [setSearchQuery]);
-
-  const onServerSearch = (event) => {
-    event.key === 'Enter' && searchQuery &&
-      searchType(searchQuery);
+class Map extends PureComponent {
+  state = {
+    map: null,
+    zoom: 1,
+    searchQuery: 'Патронное производство'
   }
 
-  useEffect(() => {
-    map && map.on('move', onMove);
-    return () => {
-      map && map.off('move', onMove);
+  componentDidUpdate(prevProps, prevState) {
+    const { map } = this.state;
+    map && !prevState.map && map.on('move', this.onMapMove);
+  }
+
+  componentWillUnmount() {
+    const { map } = this.state;
+    map && map.off('move', this.onMapMove);
+  }
+
+  setMap = (map) => this.setState({ map });
+
+  onMapMove = () => {
+    const { map } = this.state;
+    map && this.setState({ zoom: map.getZoom() });
+  };
+
+  setZoom = (mode) => {
+    const { map, zoom } = this.state;
+    const newZoom = mode === 'increase'
+      ? zoom + 1
+      : zoom - 1;
+    map && map.setZoom(newZoom);
+    this.setState({ zoom: newZoom });
+  }
+
+  increaseZoom = () => this.setZoom('increase');
+
+  decreaseZoom = () => this.setZoom('decrease');
+
+  onSearch = (event) => {
+    const { value } = event.target;
+    this.setState({ searchQuery: value });
+  }
+
+  onServerSearch = (event) => {
+    const { searchType } = this.props;
+    const { searchQuery } = this.state;
+    event.key === 'Enter' && searchQuery && searchType(searchQuery);
+  };
+
+  getMarkerEvents = (enterprise) => {
+    const { enterprisesById, openModal } = this.props;
+    return {
+      click: () => {
+        console.log(enterprisesById[enterprise.id]);
+        openModal();
+      },
     }
-  }, [map, onMove]);
+  };
 
-  const markerEventHandlets = useMemo(() => ({
-    click: openModal,
-  }), [openModal]);
+  render() {
+    const { center, enterprises, isSearchLoading } = this.props;
+    const { zoom, searchQuery } = this.state;
 
-  return (
-    <div className="app-map">
-      <nav className="app-map-navbar">
-        <input
-          className='app-map-navbar-search'
-          value={searchQuery}
-          onChange={onSearch}
-          onKeyPress={onServerSearch}
-          placeholder="Тематика"
-          disabled={isSearchLoading}
-        />
-        <div className="app-map-navbar-zoom-buttons">
-          <span className="app-map-navbar-zoom-title">{`Zoom: ${zoom}`}</span>
-          <Button
-            className="app-map-navbar-zoom-button increase"
-            onClick={increaseZoom}
-          >
-            Increase zoom level
+    return (
+      <div className="app-map" >
+        <nav className="app-map-navbar">
+          <input
+            className='app-map-navbar-search'
+            value={searchQuery}
+            onChange={this.onSearch}
+            onKeyPress={this.onServerSearch}
+            placeholder="Тематика"
+            disabled={isSearchLoading}
+          />
+          <div className="app-map-navbar-zoom-buttons">
+            <span className="app-map-navbar-zoom-title">{`Zoom: ${zoom}`}</span>
+            <Button
+              className="app-map-navbar-zoom-button increase"
+              onClick={this.increaseZoom}
+            >
+              Increase zoom level
           </Button>
-          <Button
-            className="app-map-navbar-zoom-button decrease"
-            onClick={decreaseZoom}
-          >
-            Decrease zoom level
+            <Button
+              className="app-map-navbar-zoom-button decrease"
+              onClick={this.decreaseZoom}
+            >
+              Decrease zoom level
           </Button>
-        </div>
-      </nav>
-      <MapContainer
-        id="map-container"
-        center={center}
-        minZoom={1}
-        zoom={zoom}
-        maxZoom={8}
-        zoomControl={false}
-        whenCreated={setMap}
-      >
-        <TileLayer
-          url='http://localhost:8080/russia-1-8/{z}/{x}/{y}.png'
-        />
-        {zoom > 3 && getMarkers(enterprises, zoom).map(enterprise =>
-          <Marker
-            key={enterprise.id}
-            icon={icon}
-            position={[
-              +enterprise.dadata.geo_lat,
-              +enterprise.dadata.geo_lon
-            ]}
-            eventHandlers={markerEventHandlets}
-          />)}
-        <ZoomControl
-          position="bottomright"
-        />
-      </MapContainer>
-    </div>)
+          </div>
+        </nav>
+        <MapContainer
+          id="map-container"
+          center={center}
+          minZoom={1}
+          zoom={zoom}
+          maxZoom={8}
+          zoomControl={false}
+          whenCreated={this.setMap}
+        >
+          <TileLayer
+            url='http://localhost:8080/russia-1-8/{z}/{x}/{y}.png'
+          />
+          {zoom > 3 && getMarkers(enterprises, zoom).map(enterprise =>
+            <Marker
+              key={enterprise.id}
+              icon={getIcon()}
+              position={[
+                +enterprise.dadata.geo_lat,
+                +enterprise.dadata.geo_lon
+              ]}
+              eventHandlers={this.getMarkerEvents(enterprise)}
+            />)}
+          <ZoomControl
+            position="bottomright"
+          />
+        </MapContainer>
+      </div >
+    )
+  }
 }
 
 export default Map;
-

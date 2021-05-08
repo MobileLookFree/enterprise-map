@@ -1,7 +1,7 @@
 import initialState from './initialState';
 import { actionTypes } from './actions';
 
-import keyBy from '../../../lib/keyBy';
+import keyBy from 'lib/keyBy';
 
 const getReducer = (state = initialState, { type, payload }) => {
   switch (type) {
