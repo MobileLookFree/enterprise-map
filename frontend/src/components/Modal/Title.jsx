@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import Button from '../Button';
-import { FullScreen, ExitFullScreen, Close } from '../Icons/ModalIcons';
+import { FullScreen, ExitFullScreen, Close } from './Icons';
+import colors from 'assets/colors';
 
 const Title = ({
   title,
@@ -30,12 +31,12 @@ const Title = ({
         {setFullScreen && withFullScreen
           && <Button onClick={setFullScreenHandler}>
             {!isFullScreenOpen
-              ? <FullScreen color='#1F364D' />
-              : <ExitFullScreen color='#1F364D' />}
+              ? <FullScreen color={colors.colorGray5} />
+              : <ExitFullScreen color={colors.colorGray5} />}
           </Button>}
         {onCancel &&
           <Button onClick={onCancel}>
-            <Close color='#1F364D' />
+            <Close color={colors.colorGray5} />
           </Button>}
       </div>
     </div>

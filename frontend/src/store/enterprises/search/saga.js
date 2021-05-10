@@ -1,9 +1,14 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import { actionTypes } from './actions';
 
-const searchEnterprises = (searchQuery) =>
-  fetch(`http://localhost:8080/search/${encodeURIComponent(searchQuery)}`)
-    .then(response => response.json());
+const searchEnterprises = (query) =>
+  fetch('/api/search-enterprises', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ query })
+  }).then(response => response.json());
 
 function* searchWorker({ payload }) {
   try {

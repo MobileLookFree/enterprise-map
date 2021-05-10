@@ -1,79 +1,18 @@
-.app {
-  &-map {
-    &-navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 48px;
-      padding: 0px 20px;
+.app-ui-map {
+  &-modal {
+    height: 768px;
+    width: 1024px !important;
+  }
 
-      &-search {
-        width: 480px;
-        padding: 0px 10px;
-        outline: none;
-        border: none;
-        font-size: 16px;
-        border-bottom: 1px solid lightgrey;
-
-        &:disabled {
-          background-color: lightgrey;
-          cursor: wait;
-        }
-      }
-
-      &-zoom {
-        &-title {
-          font-size: 16px;
-        }
-
-        &-buttons {
-          display: flex;
-          align-items: center;
-        }
-
-        &-button {
-          height: 36px;
-          margin: 0px 5px;
-          padding: 0px 10px;
-          background-color: transparent;
-          border: none;
-          border-radius: 6px;
-          font-size: 16px;
-          transition: background-color 0.3s;
-          cursor: pointer;
-          outline: none;
-
-          &.increase {
-            background-color: #69f0ae;
-            &:hover {
-              background-color: #00bfa5;
-            }
-          }
-
-          &.decrease {
-            background-color: #ff5252;
-            &:hover {
-              background-color: #c7032c;
-            }
-          }
-        }
-      }
-    }
-
-    &-modal {
-      height: 768px;
-      width: 1024px !important;
-    }
-
-    .leaflet {
-      &-control-attribution.leaflet-control {
-        display: none;
-      }
+  .leaflet {
+    &-control-attribution.leaflet-control {
+      display: none;
     }
   }
 }
 
 #map-container {
-  height: calc(100vh - 48px);
+  height: calc(100vh - 64px);
   width: 100%;
+  background-color: #edeef0;
 }

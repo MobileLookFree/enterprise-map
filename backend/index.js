@@ -7,6 +7,8 @@ const enterprises = require('./resources/addresses/addresses.json');
 const { DEFAULT_HEADERS } = require('./const');
 
 const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 const PORT = 8080;
 
 const tfSearch = new TFSearch();
@@ -17,7 +19,7 @@ app.get('/', (req, res) => {
   res.send('<h1>Server is working!</h1>');
 });
 
-app.get('/:source/:z/:x/:y.png', (req, res) => {
+app.get('/api/map/:source/:z/:x/:y.png', (req, res) => {
   new MBTiles(path.join(__dirname, '/resources/tiles', req.params.source + '.mbtiles'), (error, mbtiles) => {
     mbtiles.getTile(req.params.z, req.params.x, req.params.y, (error, tile, headers) => {
       if (error) {
@@ -38,11 +40,19 @@ app.get('/:source/:z/:x/:y.png', (req, res) => {
 
 app.get('/api/get-enterprises', (req, res) => {
   res.set(DEFAULT_HEADERS);
-  res.send(JSON.stringify(enterprises));
+  res.send(JSON.stringify(
+    enterprises
+      .filter(enterprise => enterprise.dadata.geo_lat && enterprise.dadata.geo_lon)
+      .map(enterprise => ({
+        ...enterprise,
+        lat: +enterprise.dadata.geo_lat,
+        lon: +enterprise.dadata.geo_lon
+      })))
+  );
 });
 
-app.get('/search/:query', async (req, res) => {
-  const query = decodeURIComponent(req.params.query)
+app.post('/api/search-enterprises', async (req, res) => {
+  const { query } = req.body;
   const { type, prediction } = await tfSearch.getType(query);
   res.set(DEFAULT_HEADERS);
   res.send(JSON.stringify({ query, type, prediction }));

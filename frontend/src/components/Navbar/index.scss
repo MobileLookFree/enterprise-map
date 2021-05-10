@@ -1,0 +1,71 @@
+.app-ui-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+  padding: 0px 20px;
+  background-color: white;
+
+  &-left {
+    display: flex;
+    align-items: center;
+
+    &-search {
+      width: 480px;
+      height: 48px;
+
+      & .ant-select-selector {
+        height: 100% !important;
+        padding: 0px 20px;
+        outline: none;
+        font-size: 16px;
+        background-color: #edeef0 !important;
+        border: 1.5px solid #edeef0 !important;
+        border-radius: 6px !important;
+        transition: all 0.3s;
+
+        & input,
+        .ant-select-selection-placeholder {
+          display: flex;
+          align-items: center;
+          height: 100% !important;
+        }
+      }
+
+      &.focus {
+        & .ant-select-selector {
+          background-color: white !important;
+        }
+      }
+
+      &-wrapper {
+        display: flex;
+        align-items: center;
+        height: 64px;
+        margin-left: 20px;
+      }
+
+      &-button {
+        position: relative;
+        right: 40px;
+      }
+
+      &-dropdown {
+        border-radius: 6px !important;
+
+        & .ant-select-item-option {
+          height: 48px;
+
+          &-content {
+            display: flex;
+            align-items: center;
+          }
+
+          &:hover {
+            background-color: #edeef0;
+          }
+        }
+      }
+    }
+  }
+}

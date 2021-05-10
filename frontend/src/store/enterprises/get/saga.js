@@ -2,9 +2,8 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import { actionTypes } from './actions';
 
 const getEnterprises = () =>
-  fetch(`http://localhost:8080/api/get-enterprises`)
-    .then(response => response.json())
-    .then((data = []) => data.filter(item => item.dadata.geo_lat && item.dadata.geo_lon));
+  fetch('/api/get-enterprises')
+    .then(response => response.json());
 
 function* getWorker() {
   try {

@@ -4,11 +4,22 @@ import { Modal as AntdModal } from 'antd';
 import Title from './Title';
 import './index.scss';
 
+import { createSelector } from 'reselect';
+
+const getStyles = createSelector(
+  ({ style }) => style,
+  (props, isFullScreenOpen) => isFullScreenOpen,
+  (style, isFullScreenOpen) => ({
+    ...{ top: 64 },
+    ...style,
+    ...isFullScreenOpen ? { top: 0, borderRadius: 0, height: '100vh' } : {}
+  })
+);
+
 const Modal = (props) => {
   const {
     className,
     wrapClassName,
-    style,
     withTitle,
     title,
     children,
@@ -29,11 +40,7 @@ const Modal = (props) => {
           isFullScreenOpen={isFullScreenOpen}
           setFullScreen={setFullScreen}
         />}
-      style={{
-        ...{ top: 64 },
-        ...style,
-        ...isFullScreenOpen ? { top: 0, borderRadius: 0, height: '100vh' } : {}
-      }}
+      style={getStyles(props, isFullScreenOpen)}
       footer={null}
     >
       {children}

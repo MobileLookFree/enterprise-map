@@ -1,6 +1,8 @@
-import { PureComponent } from 'react'
-import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet'
-import Button from '../Button';
+import { PureComponent } from 'react';
+import { Layout } from 'antd';
+import { MapContainer, TileLayer, ZoomControl, Marker, Tooltip } from 'react-leaflet';
+import L from 'leaflet';
+import NavBar from 'components/Navbar';
 
 import './index.scss';
 
@@ -14,8 +16,11 @@ const getMarkers = createSelector(
     switch (zoom) {
       case 4:
       case 5:
-        return enterprises.filter((enterprise, index) => index % 3 === 0);
       case 6:
+        return enterprises.filter((enterprise, index) => index % 5 === 0);
+      case 7:
+        return enterprises.filter((enterprise, index) => index % 3 === 0);
+      case 8:
         return enterprises.filter((enterprise, index) => index % 2 === 0);
       default:
         return enterprises;
@@ -23,11 +28,24 @@ const getMarkers = createSelector(
   }
 );
 
+const getEnterpriseCoords = createSelector(
+  (enterprise) => enterprise,
+  (enterprise) => [enterprise.lat, enterprise.lon]
+);
+
+const getEnterpriseMarker = createSelector(
+  (enterprise) => enterprise,
+  (enterprise, { selectedEnterpriseId }) => selectedEnterpriseId,
+  (enterprise, selectedEnterpriseId) => getIcon({
+    selected: enterprise.id === selectedEnterpriseId
+  })
+);
+
 class Map extends PureComponent {
   state = {
     map: null,
     zoom: 1,
-    searchQuery: 'Патронное производство'
+    selectedEnterpriseId: null
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -47,98 +65,73 @@ class Map extends PureComponent {
     map && this.setState({ zoom: map.getZoom() });
   };
 
-  setZoom = (mode) => {
-    const { map, zoom } = this.state;
-    const newZoom = mode === 'increase'
-      ? zoom + 1
-      : zoom - 1;
-    map && map.setZoom(newZoom);
-    this.setState({ zoom: newZoom });
-  }
-
-  increaseZoom = () => this.setZoom('increase');
-
-  decreaseZoom = () => this.setZoom('decrease');
-
-  onSearch = (event) => {
-    const { value } = event.target;
-    this.setState({ searchQuery: value });
-  }
-
-  onServerSearch = (event) => {
-    const { searchType } = this.props;
-    const { searchQuery } = this.state;
-    event.key === 'Enter' && searchQuery && searchType(searchQuery);
-  };
-
   getMarkerEvents = (enterprise) => {
-    const { enterprisesById, openModal } = this.props;
+    const { openModal } = this.props;
     return {
-      click: () => {
-        console.log(enterprisesById[enterprise.id]);
-        openModal();
-      },
+      click: () => openModal(enterprise),
     }
   };
 
+  selectEnterprise = (enterprise = {}) => {
+    const { map } = this.state;
+    const { id, lat, lon } = enterprise;
+    this.setState({ selectedEnterpriseId: id || null });
+    id && map && map.setView(new L.LatLng(lat, lon), 9, { animate: true });
+  };
+
   render() {
-    const { center, enterprises, isSearchLoading } = this.props;
-    const { zoom, searchQuery } = this.state;
+    const {
+      center,
+      zoomThreshold,
+      isSideMenuCollapsed,
+      setSideMenuCollapsed,
+      // redux
+      enterprises,
+      isSearchLoading,
+      searchType
+    } = this.props;
+    const { zoom } = this.state;
+    const markers = getMarkers(enterprises, zoom);
 
     return (
-      <div className="app-map" >
-        <nav className="app-map-navbar">
-          <input
-            className='app-map-navbar-search'
-            value={searchQuery}
-            onChange={this.onSearch}
-            onKeyPress={this.onServerSearch}
-            placeholder="Тематика"
-            disabled={isSearchLoading}
-          />
-          <div className="app-map-navbar-zoom-buttons">
-            <span className="app-map-navbar-zoom-title">{`Zoom: ${zoom}`}</span>
-            <Button
-              className="app-map-navbar-zoom-button increase"
-              onClick={this.increaseZoom}
-            >
-              Increase zoom level
-          </Button>
-            <Button
-              className="app-map-navbar-zoom-button decrease"
-              onClick={this.decreaseZoom}
-            >
-              Decrease zoom level
-          </Button>
-          </div>
-        </nav>
+      <Layout className='app-ui-map'>
+        <NavBar
+          zoomThreshold={zoomThreshold}
+          isSideMenuCollapsed={isSideMenuCollapsed}
+          setSideMenuCollapsed={setSideMenuCollapsed}
+          zoom={zoom}
+          selectEnterprise={this.selectEnterprise}
+          // redux
+          enterprises={enterprises}
+          isSearchLoading={isSearchLoading}
+          searchType={searchType}
+        />
         <MapContainer
-          id="map-container"
+          id='map-container'
           center={center}
           minZoom={1}
           zoom={zoom}
-          maxZoom={8}
+          maxZoom={9}
           zoomControl={false}
           whenCreated={this.setMap}
         >
-          <TileLayer
-            url='http://localhost:8080/russia-1-8/{z}/{x}/{y}.png'
-          />
-          {zoom > 3 && getMarkers(enterprises, zoom).map(enterprise =>
+          <TileLayer url='/api/map/russia-1-9/{z}/{x}/{y}.png' />
+          {zoom > zoomThreshold && markers.map(enterprise =>
             <Marker
               key={enterprise.id}
-              icon={getIcon()}
-              position={[
-                +enterprise.dadata.geo_lat,
-                +enterprise.dadata.geo_lon
-              ]}
+              icon={getEnterpriseMarker(enterprise, this.state)}
+              position={getEnterpriseCoords(enterprise)}
               eventHandlers={this.getMarkerEvents(enterprise)}
-            />)}
+            >
+              <Tooltip>
+                {enterprise.name}
+              </Tooltip>
+            </Marker>)}
           <ZoomControl
-            position="bottomright"
+            position='bottomright'
           />
         </MapContainer>
-      </div >
+      </Layout >
     )
   }
 }
