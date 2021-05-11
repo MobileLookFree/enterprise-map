@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react';
 import { AutoComplete } from 'antd';
 import Button from 'components/Button';
-import { MenuIcon, SearchIcon, SettingsIcon } from 'components/Navbar/Icons';
-import colors from 'assets/colors';
+import { MenuOutlined, SearchOutlined, SettingOutlined } from '@ant-design/icons';
+
+import { iconStyles } from 'assets/styles';
 import './index.scss';
 
 import { createSelector } from 'reselect';
@@ -23,7 +24,6 @@ const getOptions = createSelector(
 
 const NavBar = ({
   zoomThreshold,
-  isSideMenuCollapsed,
   setSideMenuCollapsed,
   zoom,
   // redux
@@ -60,9 +60,7 @@ const NavBar = ({
           className='app-ui-navbar-left-menu'
           onClick={setSideMenuCollapsed}
         >
-          <MenuIcon color={isSideMenuCollapsed
-            ? colors.colorGray1
-            : colors.colorDarkBlue} />
+          <MenuOutlined style={iconStyles} />
         </Button>
         <div className='app-ui-navbar-left-search-wrapper'>
           <AutoComplete
@@ -82,7 +80,7 @@ const NavBar = ({
             className='app-ui-navbar-left-search-button'
             onClick={onServerSearch}
           >
-            <SearchIcon />
+            <SearchOutlined style={iconStyles} />
           </Button>
         </div>
       </div>
@@ -90,7 +88,7 @@ const NavBar = ({
         <Button
           className='app-ui-navbar-filters-button'
         >
-          <SettingsIcon />
+        <SettingOutlined style={iconStyles} />
         </Button>}
     </nav>
   )

@@ -83,7 +83,6 @@ class Map extends PureComponent {
     const {
       center,
       zoomThreshold,
-      isSideMenuCollapsed,
       setSideMenuCollapsed,
       // redux
       enterprises,
@@ -97,7 +96,6 @@ class Map extends PureComponent {
       <Layout className='app-ui-map'>
         <NavBar
           zoomThreshold={zoomThreshold}
-          isSideMenuCollapsed={isSideMenuCollapsed}
           setSideMenuCollapsed={setSideMenuCollapsed}
           zoom={zoom}
           selectEnterprise={this.selectEnterprise}

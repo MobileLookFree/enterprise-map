@@ -1,8 +1,10 @@
+import { PREFIX } from '../prefix';
+
 export const actionTypes = {
   get: {
-    load: 'ENTERPRISES_LOAD',
-    success: 'ENTERPRISES_SUCCESS',
-    error: 'ENTERPRISES_ERROR',
+    load: `${PREFIX}_LOAD`,
+    success: `${PREFIX}_SUCCESS`,
+    error: `${PREFIX}_ERROR`,
   },
 };
 

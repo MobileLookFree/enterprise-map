@@ -1,3 +1,5 @@
+@import 'assets/colors.scss';
+
 .app-ui-loading-screen {
   display: flex;
   flex-direction: column;
@@ -9,6 +11,6 @@
   &-message {
     margin-top: 24px;
     font-size:20px;
-    color: #ADBACC;
+    color: $color_gray3;
   }
 }

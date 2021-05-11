@@ -10,6 +10,7 @@ import './index.scss';
 import { connect } from 'react-redux';
 import { startLoading } from 'store/enterprises/get/actions';
 import { searchType } from 'store/enterprises/search/actions';
+import { startDownloading } from 'store/enterprises/download/actions';
 
 import { MAP_CENTER, ZOOM_THRESHOLD } from './const';
 
@@ -45,6 +46,7 @@ class App extends PureComponent {
       enterprises,
       isSearchLoading,
       searchType,
+      startDownloading,
     } = this.props;
     const { isSideMenuCollapsed, isModalVisible, openedEnterprise } = this.state;
 
@@ -57,11 +59,13 @@ class App extends PureComponent {
             ? <LoadingScreen mode='error' />
             : <React.Fragment>
               <Layout>
-                <SideMenu collapsed={isSideMenuCollapsed}/>
+                <SideMenu
+                  collapsed={isSideMenuCollapsed}
+                  startDownloading={startDownloading}
+                />
                 <Map
                   center={MAP_CENTER}
                   zoomThreshold={ZOOM_THRESHOLD}
-                  isSideMenuCollapsed={isSideMenuCollapsed}
                   setSideMenuCollapsed={this.setSideMenuCollapsed}
                   openModal={this.openModal}
                   // redux
@@ -106,6 +110,7 @@ const mapState = ({
 const mapDispatch = {
   startLoading,
   searchType,
+  startDownloading,
 };
 
 export default connect(mapState, mapDispatch)(App);

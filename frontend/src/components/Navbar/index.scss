@@ -1,10 +1,12 @@
+@import 'assets/colors.scss';
+
 .app-ui-navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 64px;
   padding: 0px 20px;
-  background-color: white;
+  background-color: $color_white;
 
   &-left {
     display: flex;
@@ -19,8 +21,8 @@
         padding: 0px 20px;
         outline: none;
         font-size: 16px;
-        background-color: #edeef0 !important;
-        border: 1.5px solid #edeef0 !important;
+        background-color: $color_gray1 !important;
+        border: 1.5px solid $color_gray1 !important;
         border-radius: 6px !important;
         transition: all 0.3s;
 
@@ -34,7 +36,7 @@
 
       &.focus {
         & .ant-select-selector {
-          background-color: white !important;
+          background-color: $color_white !important;
         }
       }
 
@@ -62,7 +64,7 @@
           }
 
           &:hover {
-            background-color: #edeef0;
+            background-color: $color_gray1;
           }
         }
       }

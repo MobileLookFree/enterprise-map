@@ -1,8 +1,10 @@
+import { PREFIX } from '../prefix';
+
 export const actionTypes = {
   search: {
-    search: 'ENTERPRISES_SEARCH_LOAD',
-    success: 'ENTERPRISES_SEARCH_SUCCESS',
-    error: 'ENTERPRISES_SEARCH_ERROR',
+    search: `${PREFIX}_SEARCH_LOAD`,
+    success: `${PREFIX}_SEARCH_SUCCESS`,
+    error: `${PREFIX}_SEARCH_ERROR`,
   }
 };
 

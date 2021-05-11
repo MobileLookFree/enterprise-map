@@ -58,5 +58,13 @@ app.post('/api/search-enterprises', async (req, res) => {
   res.send(JSON.stringify({ query, type, prediction }));
 });
 
+app.get('/api/download-enterprises', (req, res) => {
+  const filePath = path.join(__dirname, '/resources/addresses/rawAddresses.xlsx');
+  const fileName = 'rawAddresses.xlsx';
+  res.set({ 'Content-disposition': `attachment; filename=${fileName}` });
+  res.set({ 'Content-type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  res.download(filePath, fileName);
+});
+
 // Starts up the server on port
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));

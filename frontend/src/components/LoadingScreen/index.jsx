@@ -1,12 +1,13 @@
-import { LoadingIcon } from '../Icons/LoadingIcon';
+import { LoadingOutlined } from '@ant-design/icons';
 import { ErrorIcon } from '../Icons/ErrorIcon';
+import colors from 'assets/colors';
 import './index.scss';
 
 const LoadingScreen = ({ mode, message }) => {
   return (
     <div className='app-ui-loading-screen'>
       {{
-        loading: <LoadingIcon />,
+        loading: <LoadingOutlined style={styles.icon}/>,
         error: <ErrorIcon />
       }[mode]}
       <span className='app-ui-loading-screen-message'>{mode === 'loading'
@@ -15,6 +16,13 @@ const LoadingScreen = ({ mode, message }) => {
       </span>
     </div>
   )
+}
+
+const styles = {
+  icon: {
+    fontSize: 72,
+    color: colors.color_gray3
+  }
 }
 
 LoadingScreen.defaultProps = {
