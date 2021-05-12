@@ -1,15 +1,19 @@
 import L from 'leaflet';
 import markerIcon from 'assets/icons/marker.svg';
 import selectedMarkerIcon from 'assets/icons/selected-marker.svg';
+import favoriteMarkerIcon from 'assets/icons/favorite-marker.svg';
 
 const getIcon = ({
   size = 24,
   selectedSize = 48,
-  selected
+  favorite,
+  selected,
 }) => {
-  const icon = selected
-    ? selectedMarkerIcon
-    : markerIcon;
+  const icon = favorite
+    ? favoriteMarkerIcon
+    : selected
+      ? selectedMarkerIcon
+      : markerIcon;
   const iconSize = selected
     ? selectedSize
     : size;

@@ -10,9 +10,14 @@ import { createSelector } from 'reselect';
 import getIcon from './getIcon';
 
 const getMarkers = createSelector(
-  (enterprises) => enterprises,
-  (enterprises, zoom) => zoom,
-  (enterprises, zoom) => {
+  ({ enterprises }) => enterprises,
+  ({ favorites }) => favorites,
+  ({ isFavoritesView }) => isFavoritesView,
+  (props, { zoom }) => zoom,
+  (enterprises, favorites, isFavoritesView, zoom) => {
+    if (isFavoritesView) {
+      return enterprises.filter(enterprise => favorites.includes(enterprise.id));
+    }
     switch (zoom) {
       case 4:
       case 5:
@@ -34,10 +39,13 @@ const getEnterpriseCoords = createSelector(
 );
 
 const getEnterpriseMarker = createSelector(
-  (enterprise) => enterprise,
-  (enterprise, { selectedEnterpriseId }) => selectedEnterpriseId,
-  (enterprise, selectedEnterpriseId) => getIcon({
-    selected: enterprise.id === selectedEnterpriseId
+  ({ favorites }) => favorites,
+  ({ isFavoritesView }) => isFavoritesView,
+  (props, { selectedEnterpriseId }) => selectedEnterpriseId,
+  (props, state, enterprise) => enterprise,
+  (favorites, isFavoritesView, selectedEnterpriseId, enterprise) => getIcon({
+    selected: enterprise.id === selectedEnterpriseId,
+    favorite: isFavoritesView && favorites.includes(enterprise.id)
   })
 );
 
@@ -66,9 +74,9 @@ class Map extends PureComponent {
   };
 
   getMarkerEvents = (enterprise) => {
-    const { openModal } = this.props;
+    const { openDetails } = this.props;
     return {
-      click: () => openModal(enterprise),
+      click: () => openDetails(enterprise),
     }
   };
 
@@ -90,7 +98,7 @@ class Map extends PureComponent {
       searchType
     } = this.props;
     const { zoom } = this.state;
-    const markers = getMarkers(enterprises, zoom);
+    const markers = getMarkers(this.props, this.state);
 
     return (
       <Layout className='app-ui-map'>
@@ -117,7 +125,7 @@ class Map extends PureComponent {
           {zoom > zoomThreshold && markers.map(enterprise =>
             <Marker
               key={enterprise.id}
-              icon={getEnterpriseMarker(enterprise, this.state)}
+              icon={getEnterpriseMarker(this.props, this.state, enterprise)}
               position={getEnterpriseCoords(enterprise)}
               eventHandlers={this.getMarkerEvents(enterprise)}
             >

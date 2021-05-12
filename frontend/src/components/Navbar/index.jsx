@@ -1,8 +1,7 @@
 import { useState, useCallback } from 'react';
 import { AutoComplete } from 'antd';
 import Button from 'components/Button';
-import { MenuOutlined, SearchOutlined, SettingOutlined } from '@ant-design/icons';
-
+import { MenuOutlined, SearchOutlined, FilterOutlined } from '@ant-design/icons';
 import { iconStyles } from 'assets/styles';
 import './index.scss';
 
@@ -88,7 +87,7 @@ const NavBar = ({
         <Button
           className='app-ui-navbar-filters-button'
         >
-        <SettingOutlined style={iconStyles} />
+        <FilterOutlined style={iconStyles} />
         </Button>}
     </nav>
   )

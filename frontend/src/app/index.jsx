@@ -3,52 +3,71 @@ import { Layout } from 'antd';
 import LoadingScreen from 'components/LoadingScreen';
 import SideMenu from 'components/SideMenu';
 import Map from 'components/Map';
-import Modal from 'components/Modal';
-import Charts from './Charts';
+import Modals from './Modals';
 import './index.scss';
 
 import { connect } from 'react-redux';
 import { startLoading } from 'store/enterprises/get/actions';
 import { searchType } from 'store/enterprises/search/actions';
 import { startDownloading } from 'store/enterprises/download/actions';
+import { loadFavorites } from 'store/enterprises/favorites/actions';
 
 import { MAP_CENTER, ZOOM_THRESHOLD } from './const';
 
 class App extends PureComponent {
   state = {
     isSideMenuCollapsed: true,
-    isModalVisible: false,
+    isFavoritesView: false,
+    isDetailsVisible: false,
+    isSettingsVisible: false,
     openedEnterprise: {}
   }
 
   componentDidMount() {
-    const { startLoading } = this.props;
+    const { startLoading, loadFavorites } = this.props;
     startLoading();
+    loadFavorites();
   }
 
-  openModal = (openedEnterprise = {}) => this.setState({
-    isModalVisible: true,
+  openDetails = (openedEnterprise = {}) => this.setState({
+    isDetailsVisible: true,
     openedEnterprise
   });
 
-  closeModal = () => this.setState({
-    isModalVisible: false,
+  closeDetails = () => this.setState({
+    isDetailsVisible: false,
     openedEnterprise: {}
   });
 
   setSideMenuCollapsed= () =>
     this.setState(prevState => ({ isSideMenuCollapsed: !prevState.isSideMenuCollapsed }));
+  
+  setFavoritesView = (isFavoritesView) =>
+    this.setState({ isFavoritesView });
+  
+  openSettings = () =>
+    this.setState({ isSettingsVisible: true });
+  
+  closeSettings = () =>
+    this.setState({ isSettingsVisible: false });
 
   render() {
     const {
       isLoading,
       error,
       enterprises,
+      favorites,
       isSearchLoading,
       searchType,
       startDownloading,
     } = this.props;
-    const { isSideMenuCollapsed, isModalVisible, openedEnterprise } = this.state;
+    const {
+      isSideMenuCollapsed,
+      isFavoritesView,
+      isSettingsVisible,
+      isDetailsVisible,
+      openedEnterprise
+    } = this.state;
 
     return (
       <div className='app'>
@@ -61,28 +80,33 @@ class App extends PureComponent {
               <Layout>
                 <SideMenu
                   collapsed={isSideMenuCollapsed}
+                  setFavoritesView={this.setFavoritesView}
+                  openSettings={this.openSettings}
+                  favorites={favorites}
                   startDownloading={startDownloading}
                 />
                 <Map
                   center={MAP_CENTER}
                   zoomThreshold={ZOOM_THRESHOLD}
+                  isFavoritesView={isFavoritesView}
                   setSideMenuCollapsed={this.setSideMenuCollapsed}
-                  openModal={this.openModal}
+                  openDetails={this.openDetails}
                   // redux
                   enterprises={enterprises}
+                  favorites={favorites}
                   isSearchLoading={isSearchLoading}
                   searchType={searchType}
                 />
               </Layout>
-              <Modal
-                className='app-ui-map-modal'
-                title={openedEnterprise.fullName || 'Предприятие'}
-                visible={isModalVisible}
-                onCancel={this.closeModal}
-                destroyOnClose
-              >
-                <Charts />
-              </Modal>
+              <Modals
+                openedEnterprise={openedEnterprise}
+                isDetailsVisible={isDetailsVisible}
+                closeDetails={this.closeDetails}
+                isSettingsVisible={isSettingsVisible}
+                closeSettings={this.closeSettings}
+                //redux
+                favorites={favorites}
+              />
             </React.Fragment>
         }[isLoading]}
       </div>
@@ -99,6 +123,9 @@ const mapState = ({
     },
     search: {
       isSearchLoading,
+    },
+    favorites: {
+      favorites
     }
   }
 }) => ({
@@ -106,11 +133,13 @@ const mapState = ({
   error,
   enterprises,
   isSearchLoading,
+  favorites,
 });
 const mapDispatch = {
   startLoading,
   searchType,
   startDownloading,
+  loadFavorites,
 };
 
 export default connect(mapState, mapDispatch)(App);

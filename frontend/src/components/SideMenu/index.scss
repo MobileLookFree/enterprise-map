@@ -1,12 +1,45 @@
-@import 'assets/colors.scss';
+@import "assets/colors.scss";
 
 .app-ui-side-menu {
-  background-color: $color_darkBlue !important;
+  background-color: $color_white !important;
+
+  &-logo {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding-left: 22px;
+    background: linear-gradient(-45deg, $color_white, #e73c7e, $color_darkBlue, $color_green);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+  }
 
   & .ant-menu-item {
     display: flex;
     align-items: center;
     height: 56px !important;
     font-size: 16px;
+
+    &:hover {
+      color: $color_darkBlue;
+    }
+
+    &-selected {
+      color: $color_darkBlue !important;
+      &::after {
+        border-right: 3px solid $color_darkBlue !important;
+      }
+    }
+  }
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
 }
