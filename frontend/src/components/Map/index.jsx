@@ -14,9 +14,19 @@ const getMarkers = createSelector(
   ({ favorites }) => favorites,
   ({ isFavoritesView }) => isFavoritesView,
   (props, { zoom }) => zoom,
-  (enterprises, favorites, isFavoritesView, zoom) => {
+  (props, { filters }) => filters,
+  (enterprises, favorites, isFavoritesView, zoom, filters) => {
+    const filterKeys = Object.keys(filters);
     if (isFavoritesView) {
       return enterprises.filter(enterprise => favorites.includes(enterprise.id));
+    }
+    if (filterKeys.length) {
+      let result = enterprises;
+      filterKeys.forEach(key => {
+        const value = filters[key];
+        result = result.filter(elem => value.includes(elem[key]));
+      });
+      return result;
     }
     switch (zoom) {
       case 4:
@@ -53,7 +63,8 @@ class Map extends PureComponent {
   state = {
     map: null,
     zoom: 1,
-    selectedEnterpriseId: null
+    selectedEnterpriseId: null,
+    filters: {}
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -76,7 +87,10 @@ class Map extends PureComponent {
   getMarkerEvents = (enterprise) => {
     const { openDetails } = this.props;
     return {
-      click: () => openDetails(enterprise),
+      click: () => {
+        console.log(enterprise);
+        openDetails(enterprise);
+      },
     }
   };
 
@@ -86,6 +100,12 @@ class Map extends PureComponent {
     this.setState({ selectedEnterpriseId: id || null });
     id && map && map.setView(new L.LatLng(lat, lon), 9, { animate: true });
   };
+
+  setFilters = () => {
+    const { filters } = this.state;
+    const isEmpty = !Object.keys(filters).length;
+    this.setState({ filters: isEmpty ? { branch: ['Авиационная промышленность'] } : {} })
+  }
 
   render() {
     const {
@@ -97,8 +117,10 @@ class Map extends PureComponent {
       isSearchLoading,
       searchType
     } = this.props;
-    const { zoom } = this.state;
+    const { zoom, filters } = this.state;
     const markers = getMarkers(this.props, this.state);
+
+    console.log(filters)
 
     return (
       <Layout className='app-ui-map'>
@@ -107,6 +129,8 @@ class Map extends PureComponent {
           setSideMenuCollapsed={setSideMenuCollapsed}
           zoom={zoom}
           selectEnterprise={this.selectEnterprise}
+          filters={filters}
+          setFilters={this.setFilters}
           // redux
           enterprises={enterprises}
           isSearchLoading={isSearchLoading}

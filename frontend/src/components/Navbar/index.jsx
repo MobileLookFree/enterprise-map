@@ -25,6 +25,8 @@ const NavBar = ({
   zoomThreshold,
   setSideMenuCollapsed,
   zoom,
+  filters,
+  setFilters,
   // redux
   selectEnterprise,
   enterprises,
@@ -85,8 +87,9 @@ const NavBar = ({
       </div>
       {zoom > zoomThreshold &&
         <Button
-          className='app-ui-navbar-filters-button'
-        >
+        className='app-ui-navbar-filters-button'
+        onClick={setFilters}
+      >
         <FilterOutlined style={iconStyles} />
         </Button>}
     </nav>

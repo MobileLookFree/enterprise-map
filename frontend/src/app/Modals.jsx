@@ -41,6 +41,15 @@ const Modals = ({
       >
         <Settings dropFavorites={dropFavorites} />
       </Modal>
+      {/* <Modal
+        className='app-ui-settings-modal'
+        title='Фильтры'
+        visible={isSettingsVisible}
+        onCancel={closeSettings}
+        destroyOnClose
+      >
+        <Settings dropFavorites={dropFavorites} />
+      </Modal> */}
     </React.Fragment >
   )
 }
