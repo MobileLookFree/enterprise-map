@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import Column from './Column';
 import Filter from './Filter';
 import './index.scss';
@@ -6,13 +7,21 @@ const Filters = ({
   branches,
   subbranches,
   filters,
-  setFilters
+  setFilters,
+  dropFilters
 }) => {
+  const dropBranches = useCallback(() =>
+    dropFilters('branch'), [dropFilters]);
+  
+  const dropSubbranches = useCallback(() =>
+    dropFilters('subbranch'), [dropFilters]);
+
   return (
     <div className='app-ui-filters'>
       <Column
         title='Направление'
         type='left'
+        onDrop={dropBranches}
       >
         {branches.map((branch, index) =>
           <Filter
@@ -20,12 +29,13 @@ const Filters = ({
             filter={branch}
             filterKey='branch'
             filters={filters}
-            onClick={setFilters}
+            setFilters={setFilters}
           />)}
       </Column>
       <Column
         title='Поднаправление'
         type='right'
+        onDrop={dropSubbranches}
       >
         {subbranches.map((subbranch, index) =>
           <Filter
@@ -33,7 +43,7 @@ const Filters = ({
             filter={subbranch}
             filterKey='subbranch'
             filters={filters}
-            onClick={setFilters}
+            setFilters={setFilters}
           />)}
       </Column>
     </div>

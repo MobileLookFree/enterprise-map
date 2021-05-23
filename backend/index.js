@@ -2,9 +2,9 @@ const express = require('express');
 const MBTiles = require('@mapbox/mbtiles');
 const path = require('path');
 
-const { TFSearch } = require('./search');
+const { TFSearch } = require('./src/search');
 const enterprises = require('./resources/addresses/addresses.json');
-const { DEFAULT_HEADERS } = require('./const');
+const { DEFAULT_HEADERS } = require('./src/const');
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));

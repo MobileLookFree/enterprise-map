@@ -76,6 +76,13 @@ class App extends PureComponent {
     this.setState({ filters: newFilters });
   }
 
+  dropFilters = (filterKey) => {
+    const { filters } = this.state;
+    const newFilters = { ...filters };
+    delete newFilters[filterKey];
+    this.setState({ filters: newFilters });
+  }
+
   render() {
     const {
       isLoading,
@@ -137,6 +144,7 @@ class App extends PureComponent {
                 closeFilters={this.closeFilters}
                 filters={filters}
                 setFilters={this.setFilters}
+                dropFilters={this.dropFilters}
                 //redux
                 favorites={favorites}
               />

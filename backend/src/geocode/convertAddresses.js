@@ -3,7 +3,7 @@ const { saveJSON } = require('./lib/saveJSON');
 const { getAddressesFields } = require('./lib/getAddressesFields.js');
 
 const rawAddresses = excelToJson({
-  sourceFile: './resources/addresses/rawAddresses.xlsx'
+  sourceFile: '../../resources/addresses/rawAddresses.xlsx'
 });
 
-saveJSON('./resources/addresses/rawAddresses.json', getAddressesFields(rawAddresses));
+saveJSON('../../resources/addresses/rawAddresses.json', getAddressesFields(rawAddresses));

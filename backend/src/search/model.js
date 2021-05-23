@@ -1,7 +1,7 @@
 const tf = require(process.platform === 'win32'
   ? '@tensorflow/tfjs-node-gpu' // NVIDIA CUDA 
   : '@tensorflow/tfjs-node'); // CPU
-const trainData = require('../resources/search/trainData.json');
+const trainData = require('../../resources/search/trainData.json');
 const { MODEL_NAME, CLASSES } = require('./const');
 
 const encodeData = async (encoder, data) => {

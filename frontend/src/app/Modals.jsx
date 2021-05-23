@@ -17,6 +17,7 @@ const Modals = ({
   closeFilters,
   filters,
   setFilters,
+  dropFilters,
   // redux      
   branches,
   subbranches,
@@ -60,6 +61,7 @@ const Modals = ({
           subbranches={subbranches}
           filters={filters}
           setFilters={setFilters}
+          dropFilters={dropFilters}
         />
       </Modal>
     </React.Fragment >

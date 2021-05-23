@@ -16,11 +16,18 @@
     width: 50%;
 
     &-title {
-      display: block;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 10px;
-      font-size: 24px;
-      line-height: 32px;
-      color: $color_gray5;
+
+      &-text {
+        @include text-elipsis;
+        width: calc(100% - 32px);
+        font-size: 24px;
+        line-height: 32px;
+        color: $color_gray5;
+      }
     }
 
     &-content {
@@ -45,10 +52,7 @@
     width: 100%;
 
     &-text {
-      display: block;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      @include text-elipsis;
       padding-left: 10px;
       color: $color_gray5;
       font-weight: 500;

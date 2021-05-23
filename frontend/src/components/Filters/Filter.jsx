@@ -4,16 +4,16 @@ import Button from 'components/Button';
 
 import colors from 'assets/colors';
 
-const Filter = ({ filter, filterKey, filters, onClick }) => {
+const Filter = ({ filter, filterKey, filters, setFilters }) => {
   const includes = useMemo(() =>
     filters[filterKey] && filters[filterKey].includes(filter), [filter, filterKey, filters])
 
-  const onClickHandler = useCallback(() =>
-    onClick(filter, filterKey), [filter, filterKey, onClick]);
+  const onClick = useCallback(() =>
+    setFilters(filter, filterKey), [filter, filterKey, setFilters]);
 
   return <Button
     className='app-ui-filters-filter'
-    onClick={onClickHandler}
+    onClick={onClick}
   >
     {includes
       ? <CheckCircleFilled style={styles.selected} />

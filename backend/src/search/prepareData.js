@@ -1,6 +1,6 @@
 const { saveJSON } = require('../lib/saveJSON');
 const { getUniqueFields } = require('../lib/getUniqueFields');
-const addresses = require('../resources/addresses/addresses.json') || [];
+const addresses = require('../../resources/addresses/addresses.json') || [];
 
 const branches =
   getUniqueFields(addresses, 'branch', false)
@@ -15,4 +15,4 @@ const subbranches =
       result: ''
     }));
 
-saveJSON('../resources/search/trainData.json', branches.concat(subbranches));
+saveJSON('../../resources/search/trainData.json', branches.concat(subbranches));
