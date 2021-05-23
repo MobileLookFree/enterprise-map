@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import Modal from 'components/Modal';
 import Settings from 'components/Settings';
+import Filters from 'components/Filters';
 import Charts from './Charts';
 
 import { setFavorite, dropFavorites } from 'store/enterprises/favorites/actions';
@@ -12,7 +13,13 @@ const Modals = ({
   closeDetails,
   isSettingsVisible,
   closeSettings,
-  // redux
+  isFiltersVisible,
+  closeFilters,
+  filters,
+  setFilters,
+  // redux      
+  branches,
+  subbranches,
   favorites,
   setFavorite,
   dropFavorites,
@@ -41,22 +48,38 @@ const Modals = ({
       >
         <Settings dropFavorites={dropFavorites} />
       </Modal>
-      {/* <Modal
-        className='app-ui-settings-modal'
+      <Modal
+        className='app-ui-filters-modal'
         title='Фильтры'
-        visible={isSettingsVisible}
-        onCancel={closeSettings}
+        visible={isFiltersVisible}
+        onCancel={closeFilters}
         destroyOnClose
       >
-        <Settings dropFavorites={dropFavorites} />
-      </Modal> */}
+        <Filters
+          branches={branches}
+          subbranches={subbranches}
+          filters={filters}
+          setFilters={setFilters}
+        />
+      </Modal>
     </React.Fragment >
   )
 }
 
+const mapState = ({
+  enterprises: {
+    get: {
+      branches,
+      subbranches,
+    },
+  }
+}) => ({
+  branches,
+  subbranches,
+});
 const mapDispatch = {
   setFavorite,
   dropFavorites,
 };
 
-export default connect(null, mapDispatch)(Modals);
+export default connect(mapState, mapDispatch)(Modals);

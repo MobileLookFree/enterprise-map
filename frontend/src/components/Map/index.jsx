@@ -13,15 +13,15 @@ const getMarkers = createSelector(
   ({ enterprises }) => enterprises,
   ({ favorites }) => favorites,
   ({ isFavoritesView }) => isFavoritesView,
+  ({ filters }) => filters,
   (props, { zoom }) => zoom,
-  (props, { filters }) => filters,
-  (enterprises, favorites, isFavoritesView, zoom, filters) => {
+  (enterprises, favorites, isFavoritesView, filters, zoom) => {
     const filterKeys = Object.keys(filters);
     if (isFavoritesView) {
       return enterprises.filter(enterprise => favorites.includes(enterprise.id));
     }
     if (filterKeys.length) {
-      let result = enterprises;
+      let result = [...enterprises];
       filterKeys.forEach(key => {
         const value = filters[key];
         result = result.filter(elem => value.includes(elem[key]));
@@ -64,7 +64,6 @@ class Map extends PureComponent {
     map: null,
     zoom: 1,
     selectedEnterpriseId: null,
-    filters: {}
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -101,26 +100,19 @@ class Map extends PureComponent {
     id && map && map.setView(new L.LatLng(lat, lon), 9, { animate: true });
   };
 
-  setFilters = () => {
-    const { filters } = this.state;
-    const isEmpty = !Object.keys(filters).length;
-    this.setState({ filters: isEmpty ? { branch: ['Авиационная промышленность'] } : {} })
-  }
-
   render() {
     const {
       center,
       zoomThreshold,
       setSideMenuCollapsed,
+      openFilters,
       // redux
       enterprises,
       isSearchLoading,
       searchType
     } = this.props;
-    const { zoom, filters } = this.state;
+    const { zoom } = this.state;
     const markers = getMarkers(this.props, this.state);
-
-    console.log(filters)
 
     return (
       <Layout className='app-ui-map'>
@@ -129,8 +121,7 @@ class Map extends PureComponent {
           setSideMenuCollapsed={setSideMenuCollapsed}
           zoom={zoom}
           selectEnterprise={this.selectEnterprise}
-          filters={filters}
-          setFilters={this.setFilters}
+          openFilters={openFilters}
           // redux
           enterprises={enterprises}
           isSearchLoading={isSearchLoading}

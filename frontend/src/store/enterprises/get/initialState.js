@@ -3,6 +3,8 @@ const initialState = {
   error: null,
   enterprises: [],
   enterprisesById: {},
+  branches: [],
+  subbranches: [],
 }
 
 export default initialState;

@@ -66,5 +66,4 @@ app.get('/api/download-enterprises', (req, res) => {
   res.download(filePath, fileName);
 });
 
-// Starts up the server on port
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));

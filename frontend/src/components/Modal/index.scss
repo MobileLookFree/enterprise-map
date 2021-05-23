@@ -28,6 +28,7 @@
       text-overflow: ellipsis;
       font-size: 24px;
       line-height: 48px;
+      color: $color_gray5;
 
       &-container {
         display: flex;
@@ -45,9 +46,14 @@
 
   & .ant-modal {
     &-content {
+      height: 100%;
       border-radius: 6px;
       background-color: unset;
       box-shadow: none;
+    }
+
+    &-body {
+      height: calc(100% - 64px);
     }
 
     &-header {

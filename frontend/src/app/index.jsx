@@ -20,6 +20,8 @@ class App extends PureComponent {
     isFavoritesView: false,
     isDetailsVisible: false,
     isSettingsVisible: false,
+    isFiltersVisible: false,
+    filters: {},
     openedEnterprise: {}
   }
 
@@ -50,6 +52,29 @@ class App extends PureComponent {
   
   closeSettings = () =>
     this.setState({ isSettingsVisible: false });
+  
+  openFilters = () =>
+    this.setState({ isFiltersVisible: true });
+  
+  closeFilters = () =>
+    this.setState({ isFiltersVisible: false });
+  
+  setFilters = (filter, filterKey) => {
+    const { filters } = this.state;
+    const newFilters = { ...filters };
+
+    if (!newFilters[filterKey]) {
+      newFilters[filterKey] = [filter];
+    } else {
+      if (newFilters[filterKey].includes(filter)) {
+        newFilters[filterKey] = newFilters[filterKey].filter(element => element !== filter);
+        !newFilters[filterKey].length && delete newFilters[filterKey];
+      } else {
+        newFilters[filterKey].push(filter);
+      }
+    }
+    this.setState({ filters: newFilters });
+  }
 
   render() {
     const {
@@ -66,6 +91,8 @@ class App extends PureComponent {
       isFavoritesView,
       isSettingsVisible,
       isDetailsVisible,
+      isFiltersVisible,
+      filters,
       openedEnterprise
     } = this.state;
 
@@ -91,6 +118,8 @@ class App extends PureComponent {
                   isFavoritesView={isFavoritesView}
                   setSideMenuCollapsed={this.setSideMenuCollapsed}
                   openDetails={this.openDetails}
+                  openFilters={this.openFilters}
+                  filters={filters}
                   // redux
                   enterprises={enterprises}
                   favorites={favorites}
@@ -104,6 +133,10 @@ class App extends PureComponent {
                 closeDetails={this.closeDetails}
                 isSettingsVisible={isSettingsVisible}
                 closeSettings={this.closeSettings}
+                isFiltersVisible={isFiltersVisible}
+                closeFilters={this.closeFilters}
+                filters={filters}
+                setFilters={this.setFilters}
                 //redux
                 favorites={favorites}
               />

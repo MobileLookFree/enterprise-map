@@ -7,7 +7,6 @@ import colors from 'assets/colors';
 import './index.scss';
 
 const Settings = ({ dropFavorites }) => {
-
   const onDropFavorites = useCallback(() => {
     dropFavorites();
     message.success('Настройки избранных сброшены');
