@@ -86,10 +86,7 @@ class Map extends PureComponent {
   getMarkerEvents = (enterprise) => {
     const { openDetails } = this.props;
     return {
-      click: () => {
-        console.log(enterprise);
-        openDetails(enterprise);
-      },
+      click: () => openDetails(enterprise),
     }
   };
 

@@ -1,8 +1,22 @@
+@import "assets/colors.scss";
+@import "assets/mixins.scss";
+
 .app-ui-detailing {
   &-favorite-button {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-right: 16px;
+  }
+
+  &-details {
+    height: 100%;
+    padding: 0px 20px;
+    overflow-y: scroll;
+    @include scroll;
+
+    & .ant-collapse-content-box {
+      padding: 0px !important;
+    }
   }
 }

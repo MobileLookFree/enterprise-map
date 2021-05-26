@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux';
 import Modal from 'components/Modal';
 import { FavoriteButton } from 'components/Detailing';
+import { Details } from 'components/Detailing';
 import Settings from 'components/Settings';
 import Filters from 'components/Filters';
-import Charts from './Charts';
 
 import { setFavorite, dropFavorites } from 'store/enterprises/favorites/actions';
 
@@ -40,7 +40,7 @@ const Modals = ({
           setFavorite={setFavorite}
         />}
       >
-        <Charts openedEnterprise={openedEnterprise} />
+        <Details openedEnterprise={openedEnterprise} />
       </Modal>
       <Modal
         className='app-ui-settings-modal'

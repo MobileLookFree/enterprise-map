@@ -15,7 +15,7 @@ const getOptions = createSelector(
     return enterprises
       .filter(enterprise => enterprise.name && enterprise.name.toLowerCase().includes(text))
       .map(enterprise => ({
-        value: enterprise.id,
+        value: enterprise.id.toString(),
         label: enterprise.name,
         data: enterprise
       }))
