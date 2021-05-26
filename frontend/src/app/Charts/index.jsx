@@ -1,7 +1,6 @@
 import { PureComponent } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from 'highcharts-react-official';
-import Button from 'components/Button';
 import './index.scss';
 
 import { defaultOptions } from './const';
@@ -58,21 +57,10 @@ class Charts extends PureComponent {
       }
     }));
 
-  setFavoriteHandler = () => {
-    const { openedEnterprise, setFavorite } = this.props;
-    setFavorite(openedEnterprise.id);
-  }
-
   render() {
-    const { openedEnterprise, favorites } = this.props;
     const { options } = this.state;
     return (
       <div className='app-charts'>
-        <Button onClick={this.setFavoriteHandler}>
-          {favorites.includes(openedEnterprise.id)
-            ? 'Удалить из избранного'
-            : 'Добавить в избранное'}
-        </Button>
         <HighchartsReact
           highcharts={Highcharts}
           options={options}

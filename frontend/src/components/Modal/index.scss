@@ -33,7 +33,7 @@
       &-container {
         display: flex;
         flex: 1 0 auto;
-        width: calc(100% - 64px);
+        max-width: calc(100% - 112px);
       }
     }
 

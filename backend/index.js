@@ -3,7 +3,7 @@ const MBTiles = require('@mapbox/mbtiles');
 const path = require('path');
 
 const { TFSearch } = require('./src/search');
-const enterprises = require('./resources/addresses/addresses.json');
+const { readEnterprises } = require('./src/mongo/read');
 const { DEFAULT_HEADERS } = require('./src/const');
 
 const app = express();
@@ -38,11 +38,12 @@ app.get('/api/map/:source/:z/:x/:y.png', (req, res) => {
   });
 });
 
-app.get('/api/get-enterprises', (req, res) => {
+app.get('/api/get-enterprises', async(req, res) => {
+  const enterprises = await readEnterprises();
   res.set(DEFAULT_HEADERS);
   res.send(JSON.stringify(
     enterprises
-      .filter(enterprise => enterprise.dadata.geo_lat && enterprise.dadata.geo_lon)
+      .filter(enterprise => enterprise.dadata && enterprise.dadata.geo_lat && enterprise.dadata.geo_lon)
       .map(enterprise => ({
         ...enterprise,
         lat: +enterprise.dadata.geo_lat,

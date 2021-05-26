@@ -5,12 +5,15 @@
 
   &-logo {
     height: 64px;
-    display: flex;
-    align-items: center;
-    padding-left: 22px;
-    background: linear-gradient(-45deg, $color_white, #e73c7e, $color_darkBlue, $color_green);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+    width: 64px;
+    padding: 4px;
+
+    &-wrapper {
+      display: flex;
+      align-items: center;
+      height: 64px;
+      width: 100%;
+    }
   }
 
   & .ant-menu-item {
@@ -28,18 +31,6 @@
       &::after {
         border-right: 3px solid $color_darkBlue !important;
       }
-    }
-  }
-
-  @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
     }
   }
 }

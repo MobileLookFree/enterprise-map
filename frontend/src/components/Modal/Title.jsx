@@ -8,6 +8,7 @@ const Title = ({
   onCancel,
   isFullScreenOpen,
   setFullScreen,
+  controlsBefore,
   controls,
   withFullScreen
 }) => {
@@ -16,6 +17,7 @@ const Title = ({
 
   return (
     <div className="app-ui-modal-title">
+      {controlsBefore}
       <div className="app-ui-modal-title-text-container">
         <span
           className="app-ui-modal-title-text"
@@ -45,6 +47,7 @@ const Title = ({
 
 Title.defaultProps = {
   title: 'Заголовок',
+  controlsBefore: null,
   controls: null,
 };
 

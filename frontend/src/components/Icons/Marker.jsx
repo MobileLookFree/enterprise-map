@@ -1,4 +1,4 @@
-export const Logo = () => (
+export const Marker = () => (
   <svg
     width="20"
     height="27"

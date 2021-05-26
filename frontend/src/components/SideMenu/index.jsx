@@ -6,7 +6,6 @@ import {
   CloudDownloadOutlined,
   SettingOutlined
 } from '@ant-design/icons';
-import { Logo } from 'components/Icons/Logo';
 import { iconStyles } from 'assets/styles';
 import './index.scss';
 
@@ -37,8 +36,12 @@ const SideMenu = ({
         collapsedWidth={64}
         width={256}
       >
-        <div className='app-ui-side-menu-logo'>
-          <Logo />
+        <div className='app-ui-side-menu-logo-wrapper'>
+          <img
+            className='app-ui-side-menu-logo'
+            src='logo.png'
+            alt='НИИ ЦЕНТР'
+          />
         </div>
         <Menu
           mode='inline'

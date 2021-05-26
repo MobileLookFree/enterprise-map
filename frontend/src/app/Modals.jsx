@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import Modal from 'components/Modal';
+import { FavoriteButton } from 'components/Detailing';
 import Settings from 'components/Settings';
 import Filters from 'components/Filters';
 import Charts from './Charts';
@@ -33,12 +34,13 @@ const Modals = ({
         visible={isDetailsVisible}
         onCancel={closeDetails}
         destroyOnClose
-      >
-        <Charts
+        controlsBefore={<FavoriteButton
           openedEnterprise={openedEnterprise}
           favorites={favorites}
           setFavorite={setFavorite}
-        />
+        />}
+      >
+        <Charts openedEnterprise={openedEnterprise} />
       </Modal>
       <Modal
         className='app-ui-settings-modal'
