@@ -1,14 +1,16 @@
 import React, { useState, useMemo } from 'react';
 import { Collapse } from 'antd';
 import DataGenerator from './DataGenerator';
+import Main from './Main';
 import Chief from './Chief';
 import Graphs from './Graphs';
 import Tables from './Tables';
 import Address from './Address';
 import Metro from './Metro';
+import Buttons from './Buttons';
 
 const { Panel } = Collapse;
-const defaultActiveKey = ['mainInfo', 'chief', 'graphs', 'tables'];
+const defaultActiveKey = ['main', 'chief', 'graphs', 'tables', 'address'];
 
 const Details = ({ openedEnterprise }) => {
   const [randomData, setRandomData] = useState([]);
@@ -25,9 +27,9 @@ const Details = ({ openedEnterprise }) => {
         <Collapse defaultActiveKey={defaultActiveKey}>
           <Panel
             header='Основная информация'
-            key='mainInfo'
+            key='main'
           >
-
+            <Main openedEnterprise={openedEnterprise} />
           </Panel>
           <Panel
             header='Руководство'
@@ -61,6 +63,7 @@ const Details = ({ openedEnterprise }) => {
               <Metro metro={metro} />
             </Panel>}
         </Collapse>
+        <Buttons openedEnterprise={openedEnterprise} />
       </div>
     </React.Fragment>
   )

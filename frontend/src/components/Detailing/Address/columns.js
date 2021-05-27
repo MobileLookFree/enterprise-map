@@ -2,7 +2,7 @@ import Button from 'components/Button';
 import { CopyOutlined } from '@ant-design/icons';
 import { iconStyles } from 'assets/styles';
 
-import { copyText } from './const';
+import copyText from 'lib/copyText';
 
 const COLUMNS = [
   {

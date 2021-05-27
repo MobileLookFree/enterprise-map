@@ -15,7 +15,7 @@ const Chief = ({ openedEnterprise }) => {
   
   return (
     <div className='app-ui-detailing-details-chief'>
-      <div className='app-ui-detailing-details-chief-icon'>
+      <div className='app-ui-detailing-icon'>
         <UserOutlined style={styles.chiefIcon} />
       </div>
       <div className='app-ui-detailing-details-chief-info'>
@@ -24,7 +24,7 @@ const Chief = ({ openedEnterprise }) => {
         <FieldTitle>E-Mail</FieldTitle>
         <FieldText>
           <a
-            className='app-ui-detailing-details-chief-link'
+            className='app-ui-detailing-link'
             href={`mailto:${openedEnterprise.email}`}
           >
             <FileTextOutlined />
@@ -41,7 +41,7 @@ const Chief = ({ openedEnterprise }) => {
             <FieldTitle>Телефон</FieldTitle>
             <FieldText>
               <a
-                className='app-ui-detailing-details-chief-link'
+                className='app-ui-detailing-link'
                 href={`tel:+${phone}`}
               >
                 <PhoneOutlined />

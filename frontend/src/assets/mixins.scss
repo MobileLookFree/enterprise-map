@@ -19,3 +19,18 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+@mixin info-block {
+  display: flex;
+  flex-direction: column;
+  max-width: 240px;
+  margin-right: 48px;
+}
+
+@mixin link {
+  color: $color_darkBlue;
+
+  & > span {
+    margin-right: 4px;
+  }
+}
