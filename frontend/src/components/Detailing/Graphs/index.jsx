@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from 'highcharts-react-official';
-import './index.scss';
 
 import { defaultOptions } from './const';
 
@@ -14,7 +13,7 @@ const Graphs = ({ series }) => {
   })), [series]);
 
   return (
-    <div className='app-ui-graphs'>
+    <div className='app-ui-detailing-details-graphs'>
       <HighchartsReact
         highcharts={Highcharts}
         options={options}

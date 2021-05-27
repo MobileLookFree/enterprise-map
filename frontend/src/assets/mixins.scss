@@ -1,15 +1,15 @@
 @mixin scroll {
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
     background: #dfe4eb;
     opacity: 0.8;
-    border-radius: 3px;
+    border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb {
     background: #adbacc;
     opacity: 0.8;
-    border-radius: 3px;
+    border-radius: 4px;
   }
 }
 

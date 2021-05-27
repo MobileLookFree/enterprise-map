@@ -13,6 +13,11 @@ const COLUMNS = [
     title: 'Расстояние, км',
     dataIndex: 'distance',
     key: 'distance',
+    sorter: {
+      compare: (a, b) => a.distance - b.distance,
+      multiple: 2,
+    },
+    showSorterTooltip: false,
   },
 ];
 

@@ -9,6 +9,20 @@
     margin-right: 16px;
   }
 
+  &-field {
+    &-title {
+      color: $color_gray3;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    &-text {
+      color: $color_gray5;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+  }
+
   &-details {
     height: 100%;
     padding: 0px 20px;
@@ -17,6 +31,60 @@
 
     & .ant-collapse-content-box {
       padding: 0px !important;
+    }
+
+    &-chief {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 20px;
+
+      &-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 96px;
+        height: 96px;
+        margin-right: 20px;
+        font-size: 64px;
+        border: 5px solid $color_darkBlue;
+        border-radius: 50%;
+      }
+
+      &-info {
+        display: flex;
+        flex-direction: column;
+        margin-right: 96px;
+      }
+
+      &-phones {
+        display: flex;
+        flex-direction: column;
+
+        &-phone {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
+      &-link {
+        color: $color_darkBlue;
+
+        & > span {
+          margin-right: 4px;
+        }
+      }
+    }
+
+    &-graphs {
+      & .highcharts-container {
+        margin: 0 auto;
+      }
+    }
+
+    &-address {
+      &-table-copy {
+        width: 100%;
+      }
     }
   }
 }
